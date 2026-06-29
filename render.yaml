@@ -1,0 +1,23 @@
+services:
+  - type: worker
+    name: oxyx-headless-bot
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: python oxyx_headless_worker.py
+    plan: free
+    envVars:
+      - key: REDIS_URL
+        fromService:
+          name: oxyx-redis
+          type: redis
+          property: connectionString
+  - type: web
+    name: oxyx-api
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: python oxyx_api.py
+    plan: free
+  - type: redis
+    name: oxyx-redis
+    plan: free
+    ipAllowList: []
